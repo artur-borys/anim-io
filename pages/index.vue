@@ -2,34 +2,29 @@
   <div class="container mx-auto">
     <div class="flex flex-col items-center h-screen pt-3">
       <toolbar
-        ><button
-          class="toolbar-item"
-          :class="{ disabled: !history.canGoBack }"
-          @click="undo"
-        >
+        ><toolbar-item :disabled="!history.canGoBack" @click="undo">
           <undo-icon />
-        </button>
-        <button
-          class="toolbar-item"
-          :class="{ disabled: !history.canGoForward }"
-          @click="redo"
-        >
+        </toolbar-item>
+        <toolbar-item :disabled="!history.canGoForward" @click="redo">
           <redo-icon />
-        </button>
-        <button
-          class="toolbar-item"
-          :class="{ active: mode === 'draw' }"
+        </toolbar-item>
+        <toolbar-item
+          :active="mode === 'draw'"
+          dropdown
           @click="setMode('draw')"
         >
           <pencil-icon />
-        </button>
-        <button
-          class="toolbar-item"
-          :class="{ active: mode === 'erase' }"
+          <div slot="dropdown">Tu będą ustawienia ołówka</div>
+        </toolbar-item>
+        <toolbar-item
+          :active="mode === 'erase'"
+          dropdown
           @click="setMode('erase')"
         >
-          <eraser-icon /></button
-      ></toolbar>
+          <eraser-icon />
+          <div slot="dropdown">A tu gumki</div>
+        </toolbar-item></toolbar
+      >
       <div class="flex flex-grow items-center">
         <drawing-canvas
           ref="canvas"
@@ -60,12 +55,14 @@
 import { History } from '@/lib/History.js'
 import DrawingCanvas from '@/components/DrawingCanvas'
 import Toolbar from '@/components/Toolbar/Toolbar'
+import ToolbarItem from '@/components/Toolbar/ToolbarItem'
 
 export default {
   name: 'Project',
   components: {
     DrawingCanvas,
     Toolbar,
+    ToolbarItem,
   },
   data() {
     return {
