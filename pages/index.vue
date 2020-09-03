@@ -1,63 +1,108 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">anim-io</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
+  <div class="container mx-auto">
+    <div class="flex flex-col items-center h-screen pt-3">
+      <toolbar
+        ><button
+          class="toolbar-item"
+          :class="{ disabled: !history.canGoBack }"
+          @click="undo"
         >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
+          <undo-icon />
+        </button>
+        <button
+          class="toolbar-item"
+          :class="{ disabled: !history.canGoForward }"
+          @click="redo"
         >
-          GitHub
-        </a>
+          <redo-icon />
+        </button>
+        <button
+          class="toolbar-item"
+          :class="{ active: mode === 'draw' }"
+          @click="setMode('draw')"
+        >
+          <pencil-icon />
+        </button>
+        <button
+          class="toolbar-item"
+          :class="{ active: mode === 'erase' }"
+          @click="setMode('erase')"
+        >
+          <eraser-icon /></button
+      ></toolbar>
+      <div class="flex flex-grow items-center">
+        <drawing-canvas
+          ref="canvas"
+          class="shadow"
+          :width="400"
+          :height="400"
+          :mode="mode"
+          @layer-draw="onLayerDraw"
+        />
+        <!-- <canvas
+          ref="canvas"
+          class="canvas bg-white shadow"
+          width="400"
+          height="400"
+          @mousedown="onMouseDown"
+          @mouseup="onMouseUp"
+          @mousemove="onMouseMove"
+          @touchstart="onMouseDown"
+          @touchmove="onMouseMove"
+          @touchend="onMouseUp"
+        /> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import { History } from '@/lib/History.js'
+import DrawingCanvas from '@/components/DrawingCanvas'
+import Toolbar from '@/components/Toolbar/Toolbar'
+
+export default {
+  name: 'Project',
+  components: {
+    DrawingCanvas,
+    Toolbar,
+  },
+  data() {
+    return {
+      canvasCtx: undefined,
+      mousePressed: false,
+      lastPos: {
+        x: 0,
+        y: 0,
+      },
+      history: new History(),
+      mode: 'draw',
+      pencil: {
+        color: '#000',
+        width: 1,
+      },
+    }
+  },
+  methods: {
+    undo() {
+      this.history.back()
+      this.$refs.canvas.setState(this.history.peek())
+    },
+    redo() {
+      this.history.forward()
+      this.$refs.canvas.setState(this.history.peek())
+    },
+    setMode(mode) {
+      this.mode = mode
+    },
+    onLayerDraw(historyEntry) {
+      this.history.push(historyEntry)
+    },
+  },
+}
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+<style lang="scss" scoped>
+.canvas {
+  cursor: crosshair;
 }
 </style>
