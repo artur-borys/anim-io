@@ -8,5 +8,6 @@
   @apply flex;
   position: fixed;
   top: 0.75rem;
+  z-index: 999;
 }
 </style>
