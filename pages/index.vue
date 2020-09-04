@@ -14,7 +14,10 @@
           @click="setMode('draw')"
         >
           <pencil-icon />
-          <div slot="dropdown">Tu będą ustawienia ołówka</div>
+          <div slot="dropdown">
+            <h4 class="text-lg font-bold mb-3">Kolor</h4>
+            <color-picker @colorSelect="onColorSelect" />
+          </div>
         </toolbar-item>
         <toolbar-item
           :active="mode === 'erase'"
@@ -32,6 +35,7 @@
           :width="400"
           :height="400"
           :mode="mode"
+          :pencil="pencil"
           @layer-draw="onLayerDraw"
         />
         <!-- <canvas
@@ -56,6 +60,7 @@ import { History } from '@/lib/History.js'
 import DrawingCanvas from '@/components/DrawingCanvas'
 import Toolbar from '@/components/Toolbar/Toolbar'
 import ToolbarItem from '@/components/Toolbar/ToolbarItem'
+import ColorPicker from '@/components/ColorPicker/ColorPicker'
 
 export default {
   name: 'Project',
@@ -63,6 +68,7 @@ export default {
     DrawingCanvas,
     Toolbar,
     ToolbarItem,
+    ColorPicker,
   },
   data() {
     return {
@@ -76,7 +82,7 @@ export default {
       mode: 'draw',
       pencil: {
         color: '#000',
-        width: 1,
+        width: 10,
       },
     }
   },
@@ -94,6 +100,9 @@ export default {
     },
     onLayerDraw(historyEntry) {
       this.history.push(historyEntry)
+    },
+    onColorSelect(color) {
+      this.pencil.color = color
     },
   },
 }

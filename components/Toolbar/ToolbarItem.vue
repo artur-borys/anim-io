@@ -5,7 +5,7 @@
       <div v-if="dropdown" class="dropdown-icon"><chevron-down-icon /></div>
     </div>
     <div
-      v-if="dropdown"
+      v-show="dropdown"
       ref="dropdown"
       class="toolbar-item-dropdown"
       @click="dropdownClick"
@@ -48,14 +48,14 @@ export default {
         this.$emit('collapse')
         document.removeEventListener('click', this.outsideClickListener)
       } else {
-        const { top, left } = this.$el.getBoundingClientRect()
-        const linkCenter = this.$el.offsetWidth / 2
+        const { top } = this.$el.getBoundingClientRect()
+        // const linkCenter = this.$el.offsetWidth / 2
         const { offsetHeight } = this.$el
         console.log(this.$refs.dropdown.offsetWidth)
         this.$refs.dropdown.style.top = `${top + offsetHeight + 12}px`
-        this.$refs.dropdown.style.left = `${
-          left + linkCenter - this.$refs.dropdown.offsetWidth / 2
-        }px`
+        // this.$refs.dropdown.style.left = `${
+        //   left + linkCenter - this.$refs.dropdown.offsetWidth / 2
+        // }px`
         this.$emit('expand')
         document.addEventListener('click', this.outsideClickListener)
       }
@@ -138,11 +138,13 @@ export default {
   @apply text-base;
   @apply text-black;
   @apply shadow;
-  width: 300px;
+  @apply rounded;
+  transform: translateX(-50%);
 
   .toolbar-item-dropdown-content {
     @apply p-3;
     position: relative;
+
     &::before {
       content: '';
       position: absolute;

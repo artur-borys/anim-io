@@ -24,6 +24,13 @@ export default {
   props: {
     width: Number,
     height: Number,
+    pencil: {
+      type: Object,
+      default: () => ({
+        color: '#000',
+        width: 10,
+      }),
+    },
     mode: {
       type: String,
       default: 'draw',
@@ -116,9 +123,9 @@ export default {
       const ctx = this.$refs.cursorCanvas.getContext('2d')
       ctx.clearRect(0, 0, this.width, this.height)
       ctx.beginPath()
-      ctx.fillStyle = this.mode === 'draw' ? '#000' : '#fff'
-      ctx.strokeStyle = '#000'
-      ctx.arc(x, y, 5, 0, 2 * Math.PI)
+      ctx.fillStyle = this.mode === 'draw' ? this.pencil.color : '#fff'
+      ctx.strokeStyle = this.pencil.color
+      ctx.arc(x, y, this.pencil.width / 2, 0, 2 * Math.PI)
       ctx.fill()
       ctx.stroke()
     },
@@ -132,8 +139,8 @@ export default {
         ctx.beginPath()
         ctx.globalCompositeOperation = 'source-over'
         if (this.mode === 'draw') {
-          ctx.strokeStyle = '#000'
-          ctx.lineWidth = 10
+          ctx.strokeStyle = this.pencil.color
+          ctx.lineWidth = this.pencil.width
           ctx.lineJoin = 'round'
           ctx.moveTo(this.lastPos.x, this.lastPos.y)
           ctx.lineTo(x, y)
