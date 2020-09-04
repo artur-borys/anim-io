@@ -8,7 +8,10 @@
         @saturationSelect="onSaturationSelect"
       />
       <hue :hsv="hsv" @hueSelect="onHueSelect" />
-      <div class="flex-grow w-20 ml-2" :style="`background-color: ${color}`" />
+      <div
+        class="flex-grow w-20 ml-2 rounded"
+        :style="`background-color: ${color}`"
+      />
     </div>
   </div>
 </template>
@@ -24,7 +27,7 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      color: '#000000',
+      color: '#ff0000',
       rgb: {
         r: 255,
         g: 0,
@@ -41,6 +44,9 @@ export default {
     color() {
       this.$emit('colorSelect', this.color)
     },
+  },
+  mounted() {
+    this.$refs.saturation.calculateColor()
   },
   methods: {
     onHueSelect(rgb) {

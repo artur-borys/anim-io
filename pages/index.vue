@@ -81,7 +81,7 @@ export default {
       history: new History(),
       mode: 'draw',
       pencil: {
-        color: '#000',
+        color: null,
         width: 10,
       },
     }
